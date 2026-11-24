@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إلى أجمل صدفة في عمري ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0614;
+      --bg-card: rgba(255, 255, 255, 0.05);
+      --border-glow: rgba(255, 77, 136, 0.35);
+      --primary: #ff4d88;
+      --secondary: #ff85a2;
+      --accent: #ffd166;
+      --text-main: #fff5f8;
+      --text-muted: #d8c3d0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: radial-gradient(circle at top, #1f0c2e 0%, #0b0614 60%, #05020a 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* شاشة القفل */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #260d36 0%, #090410 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      transition: opacity 0.9s ease, visibility 0.9s ease;
+    }
+
+    #lock-screen.unlocked {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .lock-box {
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 107, 157, 0.35);
+      border-radius: 28px;
+      padding: 40px 28px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(255, 77, 136, 0.15);
+      animation: floatBox 4s ease-in-out infinite;
+    }
+
+    @keyframes floatBox {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .heart-icon {
+      font-size: 3.4rem;
+      display: inline-block;
+      margin-bottom: 12px;
+      animation: heartbeat 1.4s infinite;
+      filter: drop-shadow(0 0 15px rgba(255, 77, 136, 0.7));
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.18); }
+      45% { transform: scale(0.95); }
+      65% { transform: scale(1.12); }
+    }
+
+    .lock-box h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff, #ff9ebb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .lock-box p {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .pass-hint {
+      display: inline-block;
+      background: rgba(255, 77, 136, 0.14);
+      border: 1px dashed rgba(255, 133, 162, 0.45);
+      color: #ffb3c6;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+      user-select: all;
+      cursor: pointer;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: 1.1rem;
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
+      outline: none;
+      margin-bottom: 16px;
+      transition: 0.3s;
+    }
+
+    .password-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 18px rgba(255, 77, 136, 0.4);
+    }
+
+    .unlock-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff4d88, #c9184a);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 77, 136, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .unlock-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(255, 77, 136, 0.6);
+    }
+
+    .error-msg {
+      color: #ff758f;
+      font-size: 0.9rem;
+      margin-top: 12px;
+      min-height: 22px;
+    }
+
+    /* المحتوى الرئيسي */
+    #main-content {
+      position: relative;
+      z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 20px 18px 80px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    #main-content.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* شريط الموسيقى في الأعلى */
+    .top-music-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .music-control {
+      background: rgba(255, 77, 136, 0.18);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 133, 162, 0.45);
+      color: #fff;
+      padding: 9px 20px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+      transition: 0.3s;
+    }
+
+    .music-control:hover {
+      background: rgba(255, 77, 136, 0.35);
+      transform: scale(1.03);
+    }
+
+    /* الهيدر */
+    header.hero {
+      text-align: center;
+      padding: 20px 20px 28px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: rgba(255, 77, 136, 0.15);
+      border: 1px solid rgba(255, 77, 136, 0.4);
+      color: #ff9ebb;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    header.hero h1 {
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 800;
+      line-height: 1.3;
+      background: linear-gradient(135deg, #ffffff 10%, #ff9ebb 55%, #ffd166 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    header.hero p {
+      color: var(--text-muted);
+      font-size: 1.06rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* الأقسام العامة */
+    .section-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glow);
+      border-radius: 26px;
+      padding: 30px 24px;
+      margin-top: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 22px;
+      color: #ff9ebb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* عداد الوقت */
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .time-box {
+      background: linear-gradient(180deg, rgba(255, 77, 136, 0.15), rgba(255, 255, 255, 0.03));
+      border: 1px solid rgba(255, 133, 162, 0.3);
+      border-radius: 20px;
+      padding: 18px 10px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .time-box:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary);
+    }
+
+    .time-box span.num {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 77, 136, 0.6);
+    }
+
+    .time-box span.label {
+      font-size: 0.9rem;
+      color: #ffb3c6;
+      font-weight: 600;
+    }
+
+    .counter-sub {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+
+    /* شبكة التواريخ المميزة */
+    .dates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    .date-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 209, 102, 0.28);
+      border-radius: 20px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .date-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(255, 209, 102, 0.12);
+    }
+
+    .date-item .icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .date-item .date-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 6px;
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .date-item .date-desc {
+      font-size: 0.98rem;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* قسم الصورة الفردية */
+    .photo-showcase {
+      text-align: center;
+    }
+
+    .photo-frame {
+      position: relative;
+      max-width: 440px;
+      margin: 0 auto;
+      border-radius: 24px;
+      padding: 10px;
+      background: linear-gradient(135deg, rgba(255, 77, 136, 0.5), rgba(255, 209, 102, 0.35));
+      box-shadow: 0 20px 50px rgba(255, 77, 136, 0.25);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 18px;
+      object-fit: cover;
+    }
+
+    .photo-caption {
+      margin-top: 16px;
+      font-family: 'Amiri', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #ffd166;
+      text-shadow: 0 0 18px rgba(255, 209, 102, 0.45);
+    }
+
+    /* ألبوم الـ 6 صور رومانسية */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 133, 162, 0.28);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .gallery-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: 0 16px 35px rgba(255, 77, 136, 0.22);
+    }
+
+    .gallery-img-wrap {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .gallery-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s ease;
+    }
+
+    .gallery-card:hover .gallery-img-wrap img {
+      transform: scale(1.06);
+    }
+
+    .gallery-text {
+      padding: 16px 14px 18px;
+      text-align: center;
+      font-family: 'Amiri', serif;
+      font-size: 1.28rem;
+      font-weight: 700;
+      color: #fff5f8;
+      line-height: 1.6;
+    }
+
+    /* قسم الرسالة (الكتابة الحية كلمة بكلمة) */
+    .letter-box {
+      background: rgba(15, 7, 26, 0.65);
+      border: 1px solid rgba(255, 133, 162, 0.35);
+      border-radius: 22px;
+      padding: 28px 22px;
+      min-height: 220px;
+      position: relative;
+    }
+
+    .letter-text {
+      font-size: 1.16rem;
+      line-height: 2.15;
+      color: #fff5f8;
+      text-align: right;
+    }
+
+    .letter-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      margin-left: 5px;
+    }
+
+    .letter-word.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .letter-line-break {
+      display: block;
+      height: 10px;
+    }
+
+    .typing-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.2em;
+      background-color: var(--primary);
+      vertical-align: middle;
+      margin-right: 4px;
+      animation: blinkCursor 0.8s infinite;
+    }
+
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* قسم البوست الجديد المنفصل */
+    .post-section {
+      background: linear-gradient(145deg, rgba(255, 77, 136, 0.09), rgba(255, 209, 102, 0.05));
+      border: 1px solid rgba(255, 209, 102, 0.35);
+    }
+
+    .post-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .post-line {
+      background: rgba(255, 255, 255, 0.04);
+      border-right: 3px solid var(--primary);
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: #fff;
+      opacity: 0;
+      transform: translateX(25px);
+      transition: opacity 0.7s ease, transform 0.7s ease, background 0.3s;
+    }
+
+    .post-line.reveal {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .post-line:hover {
+      background: rgba(255, 77, 136, 0.12);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    footer span {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .section-card { padding: 24px 16px; }
+      .letter-text { font-size: 1.05rem; line-height: 2; }
+      .post-line { font-size: 1.02rem; padding: 12px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles-canvas"></canvas>
+
+  <audio id="bg-music" loop preload="auto">
+    <source src="Ahaneksong.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- شاشة الباسورد -->
+  <div id="lock-screen">
+    <div class="lock-box">
+      <div class="heart-icon">💖</div>
+      <h1>مكاننا الخاص</h1>
+      <p>يلا افتحي بسرعه مستنيا اي 😂🙈♥</p>
+      <div class="pass-hint" title="اضغطي لنسخ الباسورد" onclick="copyPass()">𝑰 𝑳𝒐𝒗𝒆 𝒀𝒐𝒖</div>
+      <input
+        type="text"
+        id="password-field"
+        class="password-input"
+        placeholder="اكتبي الباسورد هنا..."
+        autocomplete="off"
+      />
+      <button class="unlock-btn" onclick="checkPassword()">افتحي ي قلبي 🥺🏡</button>
+      <div id="error-msg" class="error-msg"></div>
+    </div>
+  </div>
+
+  <!-- المحتوى الرئيسي -->
+  <main id="main-content">
+    <div class="top-music-bar">
+      <button class="music-control" id="music-toggle" onclick="toggleMusic()">
+        <span id="music-icon">🔊</span>
+        <span id="music-label">الأغنية شغالة</span>
+      </button>
+    </div>
+
+    <header class="hero">
+      <div class="badge">✨ حكايتنا اللي بدأت ومكملة للعمر كله ✨</div>
+      <h1>كل لحظة معاكي هي أحلى عمر</h1>
+      <p>صفحة معمولة مخصوص ليكي عشان تفضل شاهدة على أجمل أيامنا وكل تفصيلة بينا</p>
+    </header>
+
+    <!-- عداد الوقت الحي من تاريخ رجوعكم 30/10/2026 -->
+    <section class="section-card">
+      <h2 class="section-title">⏳ عداد رجوعنا ووقتنا سوا</h2>
+      <div class="counter-grid">
+        <div class="time-box">
+          <span class="num" id="months">0</span>
+          <span class="label">شهور</span>
+        </div>
+        <div class="time-box">
+          <span class="num" id="days">0</span>
+          <span class="label">أيام</span>
+        </div>
+        <div class="time-box">
+          <span class="num" id="hours">0</span>
+          <span class="label">ساعات</span>
+        </div>
+        <div class="time-box">
+          <span class="num" id="minutes">0</span>
+          <span class="label">دقائق</span>
+        </div>
+        <div class="time-box">
+          <span class="num" id="seconds">0</span>
+          <span class="label">ثواني</span>
+        </div>
+      </div>
+      <p class="counter-sub" id="total-days-text">بيحسب كل ثانية عدت من رجوعنا يوم 30/10/2026 ❤️</p>
+    </section>
+
+    <!-- التواريخ الثلاثة فقط -->
+    <section class="section-card">
+      <h2 class="section-title">📅 تواريخنا المميزة</h2>
+      <div class="dates-grid">
+        <div class="date-item">
+          <span class="icon">🌟</span>
+          <div class="date-val">22/08/2008</div>
+          <div class="date-desc">تاريخ ميلادي</div>
+        </div>
+        <div class="date-item">
+          <span class="icon">🎂</span>
+          <div class="date-val">03/09/2009</div>
+          <div class="date-desc">تاريخ ميلادها</div>
+        </div>
+        <div class="date-item">
+          <span class="icon">💞</span>
+          <div class="date-val">30/10/2026</div>
+          <div class="date-desc">تاريخ رجوعنا</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ألبوم 6 صور رومانسية وتحتهم كلام حلو -->
+    <section class="section-card">
+      <h2 class="section-title">💞 صور بتحكي حكايتنا</h2>
+      <div class="gallery-grid">
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo1.jpg" alt="صورة رومانسية 1" />
+          </div>
+          <div class="gallery-text">وجودك في حياتي هو أحلى هدية ربنا بعتهالي ❤️</div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo2.jpg" alt="صورة رومانسية 2" />
+          </div>
+          <div class="gallery-text">ضحكتك لوحدها قادرة تمحي أي تعب أو هم من قلبي ✨</div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo3.jpg" alt="صورة رومانسية 3" />
+          </div>
+          <div class="gallery-text">إنتي الأمان اللي برجعله لما الدنيا كلها تقفل في وشي 🏡🤍</div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo4.jpg" alt="صورة رومانسية 4" />
+          </div>
+          <div class="gallery-text">كل تفصيلة معاكي ليها طعم تاني وبتفضل محفورة جوايا 💫</div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo5.jpg" alt="صورة رومانسية 5" />
+          </div>
+          <div class="gallery-text">معاكي عرفت إن الحب الحقيقي سند وونس قبل أي حاجة 🥰</div>
+        </div>
+
+        <div class="gallery-card">
+          <div class="gallery-img-wrap">
+            <img src="photo6.jpg" alt="صورة رومانسية 6" />
+          </div>
+          <div class="gallery-text">هفضل أحبك وأختارك في كل مرة ومن غير أي تردد 💖</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- الصورة الجديدة بالتعليق المطلوب -->
+    <section class="section-card photo-showcase">
+      <h2 class="section-title">💫 حلمنا اللي جاي</h2>
+      <div class="photo-frame">
+        <img src="59946.jpg" alt="أنا وإنتي يوماً ما" />
+      </div>
+      <p class="photo-caption">أنا وإنتي يوماً ما ❤️</p>
+    </section>
+
+    <!-- قسم الرسالة (تظهر كلمة كلمة عند النزول لها، بإيموشنَين آخر كل جملة وبدون فواصل) -->
+    <section class="section-card" id="letter-section">
+      <h2 class="section-title">💌 رسالة من قلبي ليكي</h2>
+      <div class="letter-box">
+        <div class="letter-text" id="animated-letter"></div>
+      </div>
+    </section>
+
+    <!-- مكان جديد ومستقل للبوست -->
+    <section class="section-card post-section" id="post-section">
+      <h2 class="section-title">✨ كلام من القلب ليكي لوحدك</h2>
+      <div class="post-lines" id="post-container">
+        <div class="post-line">فيه حاجات في حياتنا بتيجي تغير المعنى كله من غير مقدمات 💫🌟</div>
+        <div class="post-line">أنا مكنتش متخيل إن شخص واحد يقدر يلم كل الدفا والونس ده في وجوده بس 🫶🥰</div>
+        <div class="post-line">معاكي حسيت إن قلبي لقى بيته الحقيقي بعد لف طويل 🏡🤍</div>
+        <div class="post-line">كل تفصيلة بتعدي بينا حتى أبسط كلمة أو نظرة بتحفر نفسها جوايا ومش بتروح أبدا 🎞️💖</div>
+        <div class="post-line">عدينا بلحظات حلوة ولحظات تقيلة بس الحقيقة إن رجوعنا ووقفتنا جنب بعض علموني قيمة اللي بينا بجد 🌧️🌈</div>
+        <div class="post-line">أنا مبشوفش فيكي مجرد حبيبة أنا شايفك أماني وراحتي وأحلى حاجة مكملة معايا في الأيام 🌙✨</div>
+        <div class="post-line">لما بتزعلي بحس إن الدنيا كلها قفلت ولما بتضحكي بحس إن كل حاجة رجعت لمكانها الطبيعي 🌸😊</div>
+        <div class="post-line">مفيش كلام كبير يقدر يوصف إحساسي وأنا حاسس إنك معايا ومطمن لوجودك 💌🫀</div>
+        <div class="post-line">مهما كبرت المشاغل أو الدنيا لفت بينا هيفضل مكانك جوايا ثابت ومش بيتغير أبدا 🔒💞</div>
+        <div class="post-line">ربنا يخليكي ليا ويديمك في حياتي سند وحب وعمر حلو منور دايما 🙏❤️</div>
+      </div>
+    </section>
+
+    <footer>
+      معمول بكل حب عشانك إنتي وبس <span>❤️</span>
+    </footer>
+  </main>
+
+  <script>
+    const passwordField = document.getElementById('password-field');
+    const errorMsg = document.getElementById('error-msg');
+    const lockScreen = document.getElementById('lock-screen');
+    const mainContent = document.getElementById('main-content');
+    const bgMusic = document.getElementById('bg-music');
+    let isPlaying = false;
+
+    function copyPass() {
+      passwordField.value = "𝑰 𝑳𝒐𝒗𝒆 𝒀𝒐𝒖";
+      passwordField.focus();
+    }
+
+    passwordField.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') checkPassword();
+    });
+
+    function checkPassword() {
+      const val = passwordField.value.trim();
+      const normalized = val.normalize('NFKC').toLowerCase();
+      if (val === '𝑰 𝑳𝒐𝒗𝒆 𝒀𝒐𝒖' || normalized === 'i love you') {
+        errorMsg.textContent = '';
+        lockScreen.classList.add('unlocked');
+        mainContent.classList.add('visible');
+        bgMusic.play().then(() => {
+          isPlaying = true;
+          updateMusicUI();
+        }).catch(() => {
+          isPlaying = false;
+          updateMusicUI();
+        });
+      } else {
+        errorMsg.textContent = 'الباسورد غلط يا قمر جربي تاني ❤️';
+        passwordField.style.borderColor = '#ff4d6d';
+      }
+    }
+
+    function toggleMusic() {
+      if (isPlaying) {
+        bgMusic.pause();
+        isPlaying = false;
+      } else {
+        bgMusic.play();
+        isPlaying = true;
+      }
+      updateMusicUI();
+    }
+
+    function updateMusicUI() {
+      const icon = document.getElementById('music-icon');
+      const label = document.getElementById('music-label');
+      if (isPlaying) {
+        icon.textContent = '🔊';
+        label.textContent = 'الأغنية شغالة';
+      } else {
+        icon.textContent = '🔇';
+        label.textContent = 'تشغيل الأغنية';
+      }
+    }
+
+    // عداد الوقت من تاريخ رجوعكم 30/10/2026
+    const startDate = new Date(2026, 9, 30, 0, 0, 0);
+
+    function updateCounter() {
+      const now = new Date();
+      let diff = now - startDate;
+      if (diff < 0) diff = 0;
+
+      let months = (now.getFullYear() - startDate.getFullYear()) * 12 + (now.getMonth() - startDate.getMonth());
+      let tempDate = new Date(startDate.getTime());
+      tempDate.setMonth(startDate.getMonth() + months);
+
+      if (tempDate > now) {
+        months--;
+        tempDate = new Date(startDate.getTime());
+        tempDate.setMonth(startDate.getMonth() + months);
+      }
+
+      const remainingMs = now - tempDate;
+      const days = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingMs / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((remainingMs / (1000 * 60)) % 60);
+      const seconds = Math.floor((remainingMs / 1000) % 60);
+
+      const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      document.getElementById('months').textContent = months;
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours;
+      document.getElementById('minutes').textContent = minutes;
+      document.getElementById('seconds').textContent = seconds;
+      document.getElementById('total-days-text').textContent =
+        `يعني إجمالي ${totalDays} يوم عدوا من رجوعنا يوم 30/10/2026 ❤️`;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    const letterSentences = [
+      "من أول يوم دخلتي فيه حياتي وكل حاجة حواليا اتغيرت للأجمل ✨💖",
+      "بقيت بشوف الدنيا بعيون تانية كلها فرحة وأمل طول ما إنتي جنبي 🌟🥰",
+      "إنتي مش بس حبيبتي إنتي صاحبتي وأماني وأغلى نعمة ربنا رزقني بيها 🤲❤️",
+      "كل لحظة بتعدي علينا بتأكدلي إني اخترت صح وإن قلبي لقى نصه التاني 💞💍",
+      "مهما حصل ومهما الدنيا شغلتنا هفضل دايما سندك وضهرك وأول واحد يفرح ليكي 🛡️🌹",
+      "بحبك النهاردة وبكرة ولآخر يوم في عمري يا أجمل حاجة حصلتلي ♾️💋"
+    ];
+
+    const letterContainer = document.getElementById('animated-letter');
+    let letterStarted = false;
+
+    function buildAndAnimateLetter() {
+      if (letterStarted) return;
+      letterStarted = true;
+      letterContainer.innerHTML = '';
+
+      const cursor = document.createElement('span');
+      cursor.className = 'typing-cursor';
+      letterContainer.appendChild(cursor);
+
+      let wordElements = [];
+
+      letterSentences.forEach((sentence) => {
+        const cleanSentence = sentence.replace(/[،,]/g, '');
+        const words = cleanSentence.split(' ');
+
+        words.forEach((w) => {
+          const span = document.createElement('span');
+          span.className = 'letter-word';
+          span.textContent = w;
+          letterContainer.insertBefore(span, cursor);
+          wordElements.push(span);
+        });
+
+        const br = document.createElement('span');
+        br.className = 'letter-line-break';
+        letterContainer.insertBefore(br, cursor);
+      });
+
+      let idx = 0;
+      const interval = setInterval(() => {
+        if (idx < wordElements.length) {
+          wordElements[idx].classList.add('show');
+          idx++;
+        } else {
+          clearInterval(interval);
+          setTimeout(() => cursor.remove(), 1200);
+        }
+      }, 170);
+    }
+
+    const letterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          buildAndAnimateLetter();
+          letterObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+
+    letterObserver.observe(document.getElementById('letter-section'));
+
+    const postLines = document.querySelectorAll('.post-line');
+    const postObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          postLines.forEach((line, index) => {
+            setTimeout(() => {
+              line.classList.add('reveal');
+            }, index * 220);
+          });
+          postObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+
+    postObserver.observe(document.getElementById('post-section'));
+
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 32; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 14 + 8,
+        speedY: Math.random() * 0.7 + 0.3,
+        opacity: Math.random() * 0.5 + 0.15
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        ctx.save();
+        ctx.globalAlpha = p.opacity;
+        ctx.font = `${p.size}px serif`;
+        ctx.fillText('❤️', p.x, p.y);
+        ctx.restore();
+
+        p.y -= p.speedY;
+        if (p.y < -20) {
+          p.y = canvas.height + 20;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+  </script>
+</body>
+</html>
